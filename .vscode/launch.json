@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "name": "Node server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/server/src/server.ts",
+      "outFiles": ["${workspaceRoot}/server/build/server.js"],
+      "sourceMaps": true
+    }
+  ]
+}
