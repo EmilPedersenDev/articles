@@ -63,6 +63,16 @@ export const refreshTokenCookie = (res: Response, refreshToken) => {
   });
 };
 
+export const createUserAuthTokens = (userId: number, res: Response) => {
+  // Sign the jwt
+  const accessToken = signJwt({ id: userId }, accessTokenExpiration.toString());
+  const refreshToken = signJwt({ id: userId }, refreshTokenExpiration.toString());
+
+  // Return the tokens in a secure http cookie
+  accessTokenCookie(res, accessToken);
+  refreshTokenCookie(res, refreshToken);
+};
+
 export const clearCookies = (res: Response) => {
   return res.clearCookie('accessToken').clearCookie('refreshToken');
 };

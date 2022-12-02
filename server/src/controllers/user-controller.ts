@@ -1,23 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import AppError from '../helpers/app-error';
+import { User } from '../helpers/types/user-types';
 const prisma = new PrismaClient();
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req?.params;
 
   if (!id) {
-    return next(new AppError('No user found', 404));
+    return next(new AppError('No id found', 404));
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: parseInt(id),
-      },
-    });
+    const [user]: Array<User> = await prisma.$queryRaw`SELECT "id", "name", "email" FROM "User" WHERE id=${parseInt(
+      id
+    )}`;
 
-    // const user = await prisma.$queryRaw`SELECT * FROM User`;
+    if (!user) {
+      throw new AppError('No user found', 404);
+    }
 
     res.status(200).json({
       status: 'success',
@@ -25,9 +26,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
         user,
       },
     });
-    if (!id) {
-      throw new AppError('No user found', 404);
-    }
   } catch (error: any) {
     next(error);
   }

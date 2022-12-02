@@ -1,20 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
+import { clearCookies, createUserAuthTokens } from '../services/auth-service';
+import { SignUp, Login } from '../helpers/types/auth-types';
+import { User } from '../helpers/types/user-types';
+import { Password } from '../helpers/types';
 import bcrypt from 'bcrypt';
 import AppError from '../helpers/app-error';
-import { accessTokenCookie, refreshTokenCookie, signJwt } from '../services/auth-service';
-import { accessTokenExpiration, refreshTokenExpiration } from '../helpers/constants';
 const prisma = new PrismaClient();
 
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, name } = req.body;
+  const { email, password, name }: SignUp = req.body;
 
   if (!email || !password || !name) {
-    next(new AppError('Please provide email, password and name', 400));
+    return next(new AppError('Please provide email, password and name', 400));
   }
 
   try {
-    const existingUser = await prisma.user.findUnique({
+    const existingUser: User = await prisma.user.findUnique({
       where: {
         email: email,
       },
@@ -24,23 +26,16 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
       throw new AppError('User already exists', 400);
     }
 
-    const encryptedPassword = await bcrypt.hash(password, 12);
+    const encryptedPassword: Password = await bcrypt.hash(password, 12);
 
-    const newUser = await prisma.user.create({
+    const newUser: User = await prisma.user.create({
       data: {
         email: email,
         password: encryptedPassword,
         name: name,
       },
     });
-
-    // Sign the jwt
-    const accessToken = signJwt({ id: newUser.id }, accessTokenExpiration.toString());
-    const refreshToken = signJwt({ id: newUser.id }, refreshTokenExpiration.toString());
-
-    // Return the tokens in a secure http cookie
-    accessTokenCookie(res, accessToken);
-    refreshTokenCookie(res, refreshToken);
+    createUserAuthTokens(newUser.id, res);
 
     res.status(201).json({
       status: 'success',
@@ -54,4 +49,46 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
   } catch (error) {
     next(error);
   }
+};
+
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+  const { password, email }: Login = req.body;
+
+  if (!password || !email) {
+    return next(new AppError('No password or email found', 400));
+  }
+
+  try {
+    const [user]: Array<User> = await prisma.$queryRaw`SELECT * FROM "User" WHERE email=${email}`;
+
+    if (!user) {
+      throw new AppError('No user found', 404);
+    }
+
+    const passwordMatch: boolean = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new AppError('Password invalid', 401);
+    }
+
+    createUserAuthTokens(user.id, res);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logout = (req: Request, res: Response) => {
+  clearCookies(res);
+  res.sendStatus(204);
 };

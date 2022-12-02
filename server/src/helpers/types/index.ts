@@ -7,3 +7,7 @@ export interface ErrorException extends Error {
   stack?: string;
   isOperational?: boolean;
 }
+
+export type Email = string;
+export type Password = string;
+export type Name = string;
