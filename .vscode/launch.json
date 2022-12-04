@@ -8,6 +8,19 @@
       "program": "${workspaceRoot}/server/src/server.ts",
       "outFiles": ["${workspaceRoot}/server/build/server.js"],
       "sourceMaps": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest: current file",
+      //"env": { "NODE_ENV": "test" },
+      "program": "${workspaceFolder}/server/node_modules/.bin/jest",
+      "args": ["${fileBasenameNoExtension}", "--config", "${workspaceFolder}/server/jest.config.js"],
+      "console": "integratedTerminal",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/server/node_modules/jest/bin/jest"
+      }
     }
   ]
 }

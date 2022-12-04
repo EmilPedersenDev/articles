@@ -30,3 +30,18 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     next(error);
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allUsers: Array<User> = await prisma.$queryRaw`SELECT * from "User"`;
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        allUsers,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
