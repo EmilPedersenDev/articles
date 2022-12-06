@@ -4,8 +4,12 @@ import AppError from '../helpers/app-error';
 import { User } from '../helpers/types/user-types';
 const prisma = new PrismaClient();
 
-export const getUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req?.params;
+interface CustomRequest extends Request {
+  user: any;
+}
+
+export const getUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
+  const { id } = req.user;
 
   if (!id) {
     return next(new AppError('No id found', 404));

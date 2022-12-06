@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import AppError from '../helpers/app-error';
 import { clearCookies, createNewAccessToken, verifyJwt } from '../services/auth-service';
 
-export const authorize = async (req: Request, res: Response, next: NextFunction) => {
+interface CustomRequest extends Request {
+  user: any;
+}
+
+export const authorize = async (req: CustomRequest, res: Response, next: NextFunction) => {
   let accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;
 
@@ -22,7 +26,8 @@ export const authorize = async (req: Request, res: Response, next: NextFunction)
 
   try {
     verifyJwt(refreshToken);
-    verifyJwt(accessToken);
+    const verifiedAccessToken = verifyJwt(accessToken);
+    req.user = verifiedAccessToken;
     return next();
   } catch (error) {
     next(error);

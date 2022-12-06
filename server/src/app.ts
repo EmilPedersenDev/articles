@@ -11,10 +11,18 @@ import userRouter from './routes/user-route';
 import authRouter from './routes/auth-route';
 import AppError from './helpers/app-error';
 import errorController from './controllers/error-controller';
+import cors from 'cors';
 
 const app = express();
 
 // Middlewares
+app.use(
+  cors({
+    origin: process.env.REACT_APP_URL,
+    credentials: true, // Allow cookies
+  })
+);
+// app.use(cors())
 app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json({ limit: '10kb' }));

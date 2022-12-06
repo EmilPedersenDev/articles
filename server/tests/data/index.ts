@@ -1,5 +1,5 @@
 export const mockUser = {
-  email: 'TestingTestesson3398@test.se',
+  email: 'testingtestesson3398@test.se',
   name: 'Test',
-  password: '123445666',
+  password: 'Testar123456',
 };
