@@ -1,43 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Login from './views/Login';
-import Signup from './views/Signup';
-import Articles from './views/Articles';
-import CreateArticle from './views/CreateArticle';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
+import { BrowserRouter } from 'react-router-dom';
 import './assets/styles/RootStyle.scss';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Articles />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/create-article',
-    element: <CreateArticle />,
-  },
-]);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <NotificationsProvider>
-        <main>
-          <RouterProvider router={router} />
-        </main>
+        <BrowserRouter>
+          <main>
+            <App />
+          </main>
+        </BrowserRouter>
       </NotificationsProvider>
     </MantineProvider>
   </React.StrictMode>

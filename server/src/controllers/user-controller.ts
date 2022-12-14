@@ -2,11 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import AppError from '../helpers/app-error';
 import { User } from '../helpers/types/user-types';
+import { CustomRequest } from '../helpers/types/auth-types';
 const prisma = new PrismaClient();
-
-interface CustomRequest extends Request {
-  user: any;
-}
 
 export const getUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const { id } = req.user;

@@ -1,4 +1,5 @@
 import { Email, Name, Password } from './index';
+import { Request } from 'express';
 
 export interface Login {
   email: Email;
@@ -7,4 +8,7 @@ export interface Login {
 
 export interface SignUp extends Login {
   name: Name;
+}
+export interface CustomRequest extends Request {
+  user: any;
 }

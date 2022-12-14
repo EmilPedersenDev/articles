@@ -7,8 +7,9 @@ import path from 'path';
 import xss from 'xss-clean';
 
 // Files
-import userRouter from './routes/user-route';
+import articlesRouter from './routes/articles-route';
 import authRouter from './routes/auth-route';
+import userRouter from './routes/user-route';
 import AppError from './helpers/app-error';
 import errorController from './controllers/error-controller';
 import cors from 'cors';
@@ -34,6 +35,7 @@ app.use(xss());
 // All server routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/articles', articlesRouter);
 
 app.get('/', (req, res) => {
   res.status(200).json({
