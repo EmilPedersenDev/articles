@@ -5,8 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
-import './assets/styles/RootStyle.scss';
-
+import './assets/styles/root.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -14,9 +13,7 @@ root.render(
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <NotificationsProvider>
         <BrowserRouter>
-          <main>
-            <App />
-          </main>
+          <App />
         </BrowserRouter>
       </NotificationsProvider>
     </MantineProvider>

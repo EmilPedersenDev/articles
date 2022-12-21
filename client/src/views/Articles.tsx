@@ -1,25 +1,48 @@
-import { useEffect, useState } from 'react';
+import '../assets/styles/articles.scss';
 import apiClient from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { Article } from '../helpers/types';
+import { Link } from 'react-router-dom';
+import { StoreContext } from '../App';
+import { showNotification } from '@mantine/notifications';
+import { useContext, useEffect } from 'react';
 
-interface Article {
-  title: string;
-  content: string;
-}
 const Articles = () => {
-  const navigate = useNavigate();
-  const [articles, setArticles] = useState<Article[]>([]);
-  useEffect(() => {
-    apiClient
-      .get('/api/v1/users')
-      .then((result) => {
-        setArticles([...articles, result.data.articles]);
-      })
-      .catch((err) => {
-        navigate(`/login`);
-      });
+  const { articles, setArticles }: any = useContext(StoreContext);
+
+  const getAllArticles = async (): Promise<void> => {
+    try {
+      const { data }: { data: Article[] } = await apiClient.get('/api/v1/articles');
+      setArticles([...data]);
+    } catch (error: any) {
+      console.error(error);
+      showNotification({ message: error?.response?.data?.message || error, color: 'red' });
+    }
+  };
+
+  useEffect((): void => {
+    getAllArticles();
   }, []);
-  return <div>Articles</div>;
+
+  return (
+    <section id="articles">
+      <ul className="articles__list">
+        {articles.map((article: Article, i: number) => (
+          <li className="articles__list-item" key={i}>
+            {article.id ? (
+              <Link to={`/articles/${article.id.toString()}`} className="article">
+                {article.title}
+              </Link>
+            ) : (
+              <Link to={`/`} className="article">
+                {article.title}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+      <Link to={'/articles/create'}>Create your own article here</Link>
+    </section>
+  );
 };
 
 export default Articles;

@@ -1,4 +1,4 @@
-import '../assets/styles/Login.scss';
+import '../assets/styles/login.scss';
 import LoginForm from '../components/LoginForm';
 
 const Login = () => {

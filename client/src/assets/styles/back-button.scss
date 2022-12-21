@@ -1,0 +1,23 @@
+.back-btn {
+  height: 1.25rem;
+  width: auto;
+  display: inline-block;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.5;
+    color: black;
+    cursor: pointer;
+  }
+
+  svg {
+    height: auto;
+    width: 0.625rem;
+    margin-right: 0.3125rem;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
