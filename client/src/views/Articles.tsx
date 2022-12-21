@@ -1,13 +1,15 @@
 import '../assets/styles/articles.scss';
 import apiClient from '../services/api';
 import { Article } from '../helpers/types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../App';
 import { showNotification } from '@mantine/notifications';
 import { FunctionComponent, useContext, useEffect } from 'react';
+import { Button } from '@mantine/core';
 
 const Articles: FunctionComponent = () => {
   const { articles, setArticles }: any = useContext(StoreContext);
+  const navigate = useNavigate();
 
   const getAllArticles = async (): Promise<void> => {
     try {
@@ -22,6 +24,10 @@ const Articles: FunctionComponent = () => {
   useEffect((): void => {
     getAllArticles();
   }, []);
+
+  const goToCreateArticle = (): void => {
+    navigate('/articles/create');
+  };
 
   return (
     <section id="articles">
@@ -40,7 +46,11 @@ const Articles: FunctionComponent = () => {
           </li>
         ))}
       </ul>
-      <Link to={'/articles/create'}>Create your own article here</Link>
+      <div className="create-article-link">
+        <Button mt="lg" onClick={goToCreateArticle}>
+          Create your own article
+        </Button>
+      </div>
     </section>
   );
 };
