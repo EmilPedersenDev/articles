@@ -5,8 +5,9 @@ import { showNotification } from '@mantine/notifications';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../services/api';
 import BackButton from '../components/BackButton';
+import { FunctionComponent } from 'react';
 
-const CreateArticle = () => {
+const CreateArticle: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const form = useForm({
@@ -34,7 +35,8 @@ const CreateArticle = () => {
       await apiClient.post('/api/v1/articles', values);
       navigate('/');
     } catch (error: any) {
-      showNotification({ message: error?.response?.data?.message });
+      console.error(error);
+      showNotification({ message: error?.response?.data?.message || error, color: 'red' });
     }
   };
   return (

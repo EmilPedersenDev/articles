@@ -4,10 +4,10 @@ import BackButton from '../components/BackButton';
 import { Article as ArticleType, ArticleIdParams, ArticleProps } from '../helpers/types';
 import { defaultArticleModel } from '../helpers/defaults';
 import { showNotification } from '@mantine/notifications';
-import { useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const Article = ({ articles }: ArticleProps) => {
+const Article: FunctionComponent<ArticleProps> = ({ articles }) => {
   const { id } = useParams<ArticleIdParams>();
   const [article, setArticle] = useState<ArticleType>(defaultArticleModel);
 

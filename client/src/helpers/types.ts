@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 export type ArticleId = number | undefined;
 export type SetUser = (user: User) => void;
 export type SetArticles = (articles: Article[]) => void;
@@ -46,4 +48,10 @@ export interface UserStoreContext {
 // Component prop types
 export interface ArticleProps {
   articles: Article[];
+}
+
+export interface ProtectedRouteProps {
+  user: User;
+  redirectPath?: string;
+  children: ReactElement<any, any> | null;
 }

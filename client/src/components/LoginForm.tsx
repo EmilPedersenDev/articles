@@ -4,10 +4,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { TextInput, PasswordInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { useContext } from 'react';
+import { FunctionComponent, useContext } from 'react';
 import { StoreContext } from '../App';
 
-const LoginForm = () => {
+const LoginForm: FunctionComponent = () => {
   const navigate = useNavigate();
   const { setUser }: any = useContext(StoreContext);
   const form = useForm({

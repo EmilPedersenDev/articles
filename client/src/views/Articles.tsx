@@ -4,9 +4,9 @@ import { Article } from '../helpers/types';
 import { Link } from 'react-router-dom';
 import { StoreContext } from '../App';
 import { showNotification } from '@mantine/notifications';
-import { useContext, useEffect } from 'react';
+import { FunctionComponent, useContext, useEffect } from 'react';
 
-const Articles = () => {
+const Articles: FunctionComponent = () => {
   const { articles, setArticles }: any = useContext(StoreContext);
 
   const getAllArticles = async (): Promise<void> => {
