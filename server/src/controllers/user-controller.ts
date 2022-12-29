@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import AppError from '../helpers/app-error';
 import { User } from '../helpers/types/user-types';
 import { CustomRequest } from '../helpers/types/auth-types';
+import { clearCookies } from '../services/auth-service';
 const prisma = new PrismaClient();
 
 export const getUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -18,16 +19,12 @@ export const getUser = async (req: CustomRequest, res: Response, next: NextFunct
     )}`;
 
     if (!user) {
-      throw new AppError('No user found', 404);
+      throw new AppError('Unauthorized', 401);
     }
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
+    res.status(200).json(user);
   } catch (error: any) {
+    clearCookies(res);
     next(error);
   }
 };
@@ -36,12 +33,7 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
   try {
     const allUsers: Array<User> = await prisma.$queryRaw`SELECT * from "User"`;
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        allUsers,
-      },
-    });
+    res.status(200).json(allUsers);
   } catch (error) {
     next(error);
   }

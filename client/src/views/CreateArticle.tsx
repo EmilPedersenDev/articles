@@ -40,7 +40,7 @@ const CreateArticle: FunctionComponent = () => {
     }
   };
   return (
-    <section id="create-article">
+    <section id="create-article" className="container">
       <BackButton />
       <h1>Create Article</h1>
       <form onSubmit={form.onSubmit(onCreateNewArticle, onCreateNewArticleError)}>

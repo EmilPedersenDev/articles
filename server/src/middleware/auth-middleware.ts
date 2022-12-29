@@ -11,7 +11,7 @@ export const authorize = async (req: CustomRequest, res: Response, next: NextFun
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    return next(new AppError('No refresh token provided', 401));
+    return next(new AppError('Unauthorized', 401));
   }
 
   if (!accessToken) {

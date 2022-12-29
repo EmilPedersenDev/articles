@@ -30,7 +30,7 @@ const Articles: FunctionComponent = () => {
   };
 
   return (
-    <section id="articles">
+    <section id="articles" className="container">
       <ul className="articles__list">
         {articles.map((article: Article, i: number) => (
           <li className="articles__list-item" key={i}>

@@ -1,4 +1,6 @@
-export const defaultArticleModel = {
+import { Article, User } from './types';
+
+export const defaultArticleModel: Article = {
   id: undefined,
   title: '',
   content: '',
@@ -9,7 +11,7 @@ export const defaultArticleModel = {
   },
 };
 
-export const defaultUserModel = {
+export const defaultUserModel: User = {
   id: undefined,
   email: '',
   name: '',

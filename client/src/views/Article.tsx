@@ -37,7 +37,7 @@ const Article: FunctionComponent<ArticleProps> = ({ articles }) => {
   }, []);
 
   return (
-    <section id="article">
+    <section id="article" className="container">
       <BackButton />
       <h1>{article.title} </h1>
       <p> {article.content} </p>

@@ -23,7 +23,6 @@ app.use(
     credentials: true, // Allow cookies
   })
 );
-// app.use(cors())
 app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json({ limit: '10kb' }));

@@ -1,15 +1,54 @@
 import { PrismaClient } from '@prisma/client';
-import { NextFunction, Request, Response }  from 'express';
+import { NextFunction, Request, Response } from 'express';
 import AppError from '../helpers/app-error';
 import { Article } from '../helpers/types/article-types';
 import { User } from '../helpers/types/user-types';
 import { CustomRequest } from '../helpers/types/auth-types';
 const prisma = new PrismaClient();
 
-export const getAllArticles = async (req: Request, res: Response, next: NextFunction ) => {
+export const getAllArticles = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const articles: Article[] = await prisma.$queryRaw`SELECT * FROM "Article"`;
+    const articles: Article[] = await prisma.article.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
     res.status(200).json(articles);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getArticle = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('No id provided', 400));
+  }
+
+  try {
+    const article = await prisma.article.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!article) {
+      throw new AppError('No article found', 404);
+    }
+
+    res.status(200).json(article);
   } catch (error) {
     next(error);
   }
@@ -30,11 +69,11 @@ export const getArticlesByUser = async (req: CustomRequest, res: Response, next:
         articles: true,
       },
     });
-  
+
     if (!user || !user.articles) {
-      throw new AppError('No User or articles found', 500)
+      throw new AppError('No User or articles found', 500);
     }
-  
+
     res.status(201).json(user.articles);
   } catch (error) {
     next(error);
@@ -54,7 +93,7 @@ export const createArticle = async (req: CustomRequest, res: Response, next: Nex
       data: {
         title: newArticlesReq.title,
         content: newArticlesReq.content,
-        published: newArticlesReq.published,
+        published: true,
         userId: id,
       },
     });
@@ -69,20 +108,20 @@ export const createArticle = async (req: CustomRequest, res: Response, next: Nex
   }
 };
 
-export const deleteArticle = async(req: CustomRequest, res: Response, next: NextFunction) => {
+export const deleteArticle = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const { id: userId } = req.user;
   const { id: articleId } = req.params;
 
-  if(!userId || !articleId) {
-    return next(new AppError('No userId or article id provided', 400))
+  if (!userId || !articleId) {
+    return next(new AppError('No userId or article id provided', 400));
   }
-  
+
   try {
     await prisma.article.delete({
       where: {
-        id: parseInt(articleId) 
-      }
-    })
+        id: parseInt(articleId),
+      },
+    });
 
     res.sendStatus(204);
   } catch (error) {
